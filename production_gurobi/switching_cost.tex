@@ -1,0 +1,113 @@
+\documentclass{article}
+\author{Haohaiqiang}
+\title{Minimization of production switching cost} % 切换成本最小
+\usepackage{enumerate}
+\usepackage{amsmath}
+\newcommand{\myref}[1]{Eq.(\ref{#1})}
+\usepackage{booktabs} % 三线表需要的格式
+
+\begin{document}
+	\maketitle
+	\section{Scenario of production switching}
+	\begin{enumerate}[(1)]
+		\item There are two lines namely $ L_1 $ and $ L_2 $, and the production capacities are respectively 24 and 24.\\
+		\item Four kinds  of products $ A_1, A_2, B_1 and B_2 $are to be produced, the needs are 14, 10, 12, and 12 respectively. \\
+		\item The switching cost between two products is shown in Table \ref{sc}\\
+		\item Initial condition: the last state of the previous schedule is $ L_1:A_1 $ and $ L_2:A2 $.
+	\end{enumerate}
+	\begin{table}
+		\centering
+		\caption{Switching cost between two products}
+		\begin{tabular}{*{5}{c}} 
+		\toprule
+		& A1 & A2 & B1 & B2 \\
+		\midrule
+		A1& 0 & 1 & 4 & 4 \\
+		
+		A2& 1 & 0 & 4 & 4 \\
+		
+		B1& 4 & 4 & 0 & 1 \\
+		
+		B2& 4 & 4 & 1 & 0 \\
+		\bottomrule
+		\label{sc}
+		\end{tabular}
+	\end{table}
+	Objective: to allocate the products into the optimal lines to minimize the switching cost. The mathematical model of the production planning can be described as \myref{sm}\\ The parameter is the number of product kinds $ P $, the number of each kind $ P_i $, the number of lines $ L $, the switching cost $ C_{j,i} $ of product $ i $ that produced immediately after $ j $.
+	The relative variables are: $ N_i $ to represent the number of product $ i $ that allocated to line 1. $ X_{j,i} $ to represent whether product $ i $ is produced immediately after $ j $.
+	\begin{align}
+		\min f &= \min \sum_{i=1}^{P}\sum_{j=1}^{P}(N_i\cdot X_{j,i}\cdot C_{j,i})\\&+\sum_{i=1}^{P}\sum_{j=1}^{P}((P_i-N_i)\cdot X_{j,i}\cdot C_{j,i})\\
+		\text{s.t.} \nonumber\\
+		&N_i \leq P_i\\
+		&\sum_{j=1}^{P}X_{j,i}=1\\
+		&\sum_{i=1}^{P}X_{j,i}=1\\
+		X_{j,i}&=\begin{cases}
+			1, & \text{product $ i $ is produced immediately after $ j $}\\
+			0, &\text{otherwise};
+		\end{cases}
+	\end{align}
+
+	\section{Assembly planning}
+	\subsection{Scenario}
+	\begin{enumerate}[(1)]
+		\item Orders for multi-customers:$ O_1 $,$ O_2 $,$ O_3 $,$ O_4 $.\\
+		\item Each order is accompanied with three operations [1,2,3], the processing times are different, as shown in table \ref{order_operations}.\\
+		\item The operating resources are $ R_1 $, $ R2 $, and the molds are $ M_1 $ and $ M_2 $.\\
+		\item The processing resources and molds required for each operation are also different. This example assumes that each process can start only when a resource and a mold are available.\\
+		\item Multiple choices of resources and molds are allowed for each process. For example, processing resources are shown in Table \ref{resources_ope}.\\
+	\end{enumerate}
+	\begin{table}
+		\centering
+		\caption{Operating times of each order}
+		\begin{tabular}{*{4}{c}}
+			\toprule
+			& Operation1 & operation2 & Operation3\\
+			\midrule
+			O1&10&20&30\\
+			O2&40&30&20\\
+			O3&20&20&30\\
+			O4&40&40&30\\
+			\bottomrule
+			\label{order_operations}
+		\end{tabular}
+	\end{table}
+	\begin{table} 
+		\centering
+		\caption{Resources for operations}
+		\begin{tabular} {*{4}{c}}
+			\toprule
+			& Operation & Resource & Available\\
+			\midrule
+			O1&1&R1&Y\\
+			O1&1&R2&Y\\
+			O1&2&R1&Y\\
+			O1&2&R2&N\\
+			\bottomrule
+			\label{resources_ope}
+		\end{tabular}
+	\end{table}
+	Target: to minimize the completion time of all the orders by maximizing the resources and molds.
+	\subsection{Model of the completion times}
+	The given parameters are:
+	\begin{enumerate}[i.]
+		\item the number of orders $ No $;\\
+		\item the number of operations of each order $ N_i $;\\
+		\item the machining times $ T_{i,j,k,l} $ of operation $ i $ of order $ j $ in machine $ k $ with mold $ l $;\\
+		\item $ X_{i,j,k} $whether the operation $ i $ of order $ j $ is available in machine $ k $;\\
+		\item $ Y_{i,j,l} $whether the operation $ i $ of order $ j $ is available with mold $ l $;\\
+	\end{enumerate}
+	\begin{align}
+		\min C_{max} &= \min \max\left\{C_{i,j}\right\} \label{obj}\\
+		\text{s.t.} \nonumber \\
+		C_{i,j} &\geq \max \left\{C_{i-1,j}, F_k, E_l\right\} + T_{i,j,k,l}\cdot X_{i,j,k}\cdot Y_{i,j,l}\\
+		C_{0,0}&=0\\
+		X_{i,j,k}&=\begin{cases}
+			1, &\text{if the machine $ k $ is available for operation $ i $ of order $ j $};\\
+			0,&\text{otherwise}.
+		\end{cases}\\
+		Y_{i,j,l}&=\begin{cases}
+			1, &\text{if mold $ l $ is available for operation $ i $ of order $ j $};\\
+			0,&\text{otherwise}.
+		\end{cases}
+	\end{align}
+\end{document}
